@@ -42,7 +42,7 @@ def force_transfer():
 def send_email():
     fromaddr = os.getenv("EMAIL_FROM")
 
-    with open('config.txt', 'r') as f:
+    with open('emails.txt', 'r') as f:
         emails = f.read().splitlines()
 
     msg = MIMEMultipart('alternative')
@@ -73,8 +73,6 @@ def transfer():
 
 
 
-
-schedule.every(30).minutes.do(transfer)
 schedule.every(1).day.do(send_email)
 
 
