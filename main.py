@@ -19,31 +19,36 @@ def subscribe(stock):
     config = open('config.txt', 'a')
     config.write(stock + '\n')
     config.close()
+    transfer()
+    return jsonify('OK'), 200
 
 @server.route('/subscribe_email/<email>', methods = ['POST'])
 def subscribe_email(email):
     config = open('emails.txt', 'a')
     config.write(email + '\n')
     config.close()
+    return jsonify('OK'), 200
 
 @server.route('/force_send')
 def force_send():
     send_email()
+    return jsonify('OK'), 200
 
 @server.route('/force_transfer')
 def force_transfer():
     transfer()
+    return jsonify('OK'), 200
 
 def send_email():
     fromaddr = os.getenv("EMAIL_FROM")
 
-    with open('config.txt', 'r') as f:
+    with open('emails.txt', 'r') as f:
         emails = f.read().splitlines()
 
     msg = MIMEMultipart('alternative')
     msg['From'] = fromaddr
     msg['Subject'] = "Stocks"
-    plain = 'Hi, mate'
+    plain = 'Hi, mate https://stocks-digest.herokuapp.com/'
     msg.attach(MIMEText(plain, 'plain'))
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
@@ -68,7 +73,6 @@ def transfer():
 
 
 
-schedule.every(30).minutes.do(transfer)
 schedule.every(1).day.do(send_email)
 
 
