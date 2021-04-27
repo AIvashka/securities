@@ -64,7 +64,7 @@ def transfer():
     wr_ = open('templates/transfer.html', "w")
     wr_.write('<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>')
     for stock in stocks:
-        prepor = prep.populate(width = 980, height=610, symbol = stock, interval = 120,
+        prepor = prep.populate(width = 980, height=610, symbol = stock, interval = 60,
                                timezone='Etc/UTC', theme='dark', style = '1', locale = 'en', toolbar_bg='#f1f3f6',
                                enable_publishing = False, allow_symbol_change=True, container_id='tradingview_' + str(random.randrange(100000000)))
         tr = prepor.get_chart()
@@ -73,7 +73,8 @@ def transfer():
 
 
 
-schedule.every(1).day.do(send_email)
+schedule.every().day.at("17:00").do(send_email)
+schedule.every().day.at("03:00").do(send_email)
 
 
 def check_transfer():
